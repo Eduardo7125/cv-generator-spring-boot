@@ -1,0 +1,189 @@
+/* =========================================== */
+/* VARIABLES Y ESTILOS GLOBALES                */
+/* =========================================== */
+:root {
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --primary-color: #2c3e50; /* Un azul oscuro profesional */
+    --secondary-color: #3498db; /* Un azul más brillante para enlaces/acentos */
+    --text-color: #333;
+    --background-color: #f4f7f6; /* Un gris muy claro para el fondo de la página */
+    --page-background: #ffffff; /* Blanco para la hoja del CV */
+    --border-color: #e0e0e0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, h2, h3, h4 {
+    color: var(--primary-color);
+    margin: 0;
+}
+
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================== */
+/* CONTENEDOR PRINCIPAL DEL CV                 */
+/* =========================================== */
+.cv-container {
+    background-color: var(--page-background);
+    width: 21cm; /* Ancho de una hoja A4 */
+    min-height: 29.7cm; /* Alto de una hoja A4 */
+    padding: 2.5cm;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+
+/* =========================================== */
+/* ENCABEZADO (HEADER)                         */
+/* =========================================== */
+header {
+    text-align: center;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+header .profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 4px solid var(--secondary-color);
+}
+
+header h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+}
+
+header h2 {
+    font-size: 1.4em;
+    font-weight: 500;
+    color: #555;
+}
+
+.contact-info, .social-links {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 10px;
+}
+
+.social-links a {
+    margin: 0 10px;
+}
+
+
+/* =========================================== */
+/* SECCIONES PRINCIPALES (Experiencia, etc.)   */
+/* =========================================== */
+main section {
+    margin-bottom: 30px;
+}
+
+main section h3 {
+    font-size: 1.5em;
+    font-weight: 700;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+/* Estilo para cada item (puesto de trabajo, estudio, etc.) */
+.item {
+    margin-bottom: 20px;
+}
+
+.item h4 {
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.item .subheading {
+    font-weight: bold;
+    color: #444;
+}
+
+.item .location, .item .period {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 4px;
+}
+
+.item .description {
+    margin-top: 8px;
+    line-height: 1.6;
+}
+
+/* Lista de habilidades */
+.skill-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill-list li {
+    background-color: #eaf2f8;
+    color: var(--secondary-color);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+
+/* =========================================== */
+/* BOTONES DE ACCIÓN (Descargar, Editar)       */
+/* =========================================== */
+.action-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+}
+
+.button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.download-button {
+    background-color: #27ae60; /* Verde */
+}
+
+.edit-button {
+    background-color: #f39c12; /* Naranja */
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'CV de ' + ${cvData.personalDetails.firstName} + ' ' + ${cvData.personalDetails.lastName}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="cv-container">
+    <header>
+        <img th:if="${cvData.personalDetails.profilePicturePath}"
+             th:src="@{'/uploads/' + ${cvData.personalDetails.profilePicturePath}}"
+             alt="Foto de perfil" class="profile-picture">
+
+        <h1 th:text="${cvData.personalDetails.firstName} + ' ' + ${cvData.personalDetails.lastName}"></h1>
+        <h2 th:text="${cvData.personalDetails.jobTitle}"></h2>
+        <div class="contact-info">
+            <span th:text="${cvData.personalDetails.email}"></span>
+            <span th:if="${cvData.personalDetails.phone}" th:text="' | ' + ${cvData.personalDetails.phone}"></span>
+            <span th:if="${cvData.personalDetails.city}" th:text="' | ' + ${cvData.personalDetails.city}"></span>
+        </div>
+        <div class="social-links">
+            <a th:if="${cvData.personalDetails.linkedinUrl}" th:href="${cvData.personalDetails.linkedinUrl}" target="_blank">LinkedIn</a>
+            <a th:if="${cvData.personalDetails.githubUrl}" th:href="${cvData.personalDetails.githubUrl}" target="_blank">GitHub</a>
+            <a th:if="${cvData.personalDetails.portfolioUrl}" th:href="${cvData.personalDetails.portfolioUrl}" target="_blank">Portfolio</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Perfil Profesional -->
+        <section class="profile" th:if="${!#strings.isEmpty(cvData.personalDetails.professionalProfile)}">
+            <h3>Extracto</h3>
+            <p th:utext="${#strings.replace(cvData.personalDetails.professionalProfile, T(java.lang.System).getProperty('line.separator'), '&lt;br /&gt;')}"></p>
+        </section>
+
+        <!-- Experiencia -->
+        <section th:if="${!#lists.isEmpty(cvData.experiences) and !#strings.isEmpty(cvData.experiences[0].jobTitle)}">
+            <h3>Experiencia</h3>
+            <div class="item" th:each="exp : ${cvData.experiences}">
+                <h4 th:text="${exp.jobTitle}"></h4>
+                <p class="subheading" th:text="${exp.companyName} + ' · ' + ${exp.period}"></p>
+                <p class="location" th:text="${exp.location}"></p>
+                <p class="description" th:utext="${#strings.replace(exp.description, T(java.lang.System).getProperty('line.separator'), '&lt;br /&gt;')}"></p>
+            </div>
+        </section>
+
+        <!-- Educación -->
+        <section th:if="${!#lists.isEmpty(cvData.educations) and !#strings.isEmpty(cvData.educations[0].institution)}">
+            <h3>Educación</h3>
+            <div class="item" th:each="edu : ${cvData.educations}">
+                <h4 th:text="${edu.institution}"></h4>
+                <p class="subheading" th:text="${edu.degree} + ', ' + ${edu.fieldOfStudy}"></p>
+                <p class="location" th:text="${edu.period}"></p>
+                <p class="description" th:if="${edu.description}" th:utext="${#strings.replace(edu.description, T(java.lang.System).getProperty('line.separator'), '&lt;br /&gt;')}"></p>
+            </div>
+        </section>
+
+        <!-- Certificaciones -->
+        <section th:if="${!#lists.isEmpty(cvData.certifications) and !#strings.isEmpty(cvData.certifications[0].name)}">
+            <h3>Licencias y certificaciones</h3>
+            <div class="item" th:each="cert : ${cvData.certifications}">
+                <h4 th:text="${cert.name}"></h4>
+                <p class="subheading" th:text="${cert.issuingOrganization}"></p>
+                <p class="location" th:text="'Expedición: ' + ${cert.issueDate}"></p>
+                <a class="credential-link" th:if="${cert.credentialUrl}" th:href="${cert.credentialUrl}" target="_blank">Mostrar credencial</a>
+            </div>
+        </section>
+
+        <!-- Habilidades -->
+        <section class="skills" th:if="${!#lists.isEmpty(cvData.skills) and !#strings.isEmpty(cvData.skills[0].name)}">
+            <h3>Habilidades</h3>
+            <ul class="skill-list">
+                <li th:each="skill : ${cvData.skills}" th:text="${skill.name}"></li>
+            </ul>
+        </section>
+    </main>
+</div>
+
+<div class="action-buttons">
+    <a th:href="@{/download-pdf}" class="button download-button">Descargar como PDF</a>
+    <a th:href="@{/cv-form}" class="button edit-button">Editar CV</a>
+</div>
+
+</body>
+</html>

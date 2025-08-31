@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor de CV Moderno</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/form-style.css}">
+</head>
+<body>
+
+<!-- =================================================== -->
+<!-- PLANTILLAS PARA JAVASCRIPT (NO SE MUESTRAN)         -->
+<!-- Estas plantillas son clonadas para añadir nuevas   -->
+<!-- secciones dinámicamente.                          -->
+<!-- =================================================== -->
+<template id="experience-template">
+    <input type="text" data-name="experiences[__INDEX__].jobTitle" placeholder="Puesto"/>
+    <input type="text" data-name="experiences[__INDEX__].companyName" placeholder="Empresa"/>
+    <input type="text" data-name="experiences[__INDEX__].location" placeholder="Ubicación"/>
+    <input type="text" data-name="experiences[__INDEX__].period" placeholder="Período (Ej: Ene 2022 - Presente)"/>
+    <textarea rows="4" data-name="experiences[__INDEX__].description" placeholder="Descripción y logros..."></textarea>
+</template>
+
+<template id="education-template">
+    <input type="text" data-name="educations[__INDEX__].institution" placeholder="Institución Educativa"/>
+    <input type="text" data-name="educations[__INDEX__].degree" placeholder="Título"/>
+    <input type="text" data-name="educations[__INDEX__].fieldOfStudy" placeholder="Campo de estudio"/>
+    <input type="text" data-name="educations[__INDEX__].period" placeholder="Período"/>
+    <textarea rows="3" data-name="educations[__INDEX__].description" placeholder="Actividades, notas, etc. (opcional)"></textarea>
+</template>
+
+<template id="certification-template">
+    <input type="text" data-name="certifications[__INDEX__].name" placeholder="Nombre de la certificación"/>
+    <input type="text" data-name="certifications[__INDEX__].issuingOrganization" placeholder="Entidad emisora"/>
+    <input type="text" data-name="certifications[__INDEX__].issueDate" placeholder="Fecha de expedición"/>
+    <input type="text" data-name="certifications[__INDEX__].credentialUrl" placeholder="URL de la credencial"/>
+</template>
+
+<template id="project-template">
+    <input type="text" data-name="projects[__INDEX__].name" placeholder="Nombre del proyecto"/>
+    <input type="text" data-name="projects[__INDEX__].period" placeholder="Período"/>
+    <input type="text" data-name="projects[__INDEX__].url" placeholder="URL del proyecto"/>
+    <textarea rows="3" data-name="projects[__INDEX__].description"></textarea>
+</template>
+
+<template id="skill-template">
+    <input type="text" data-name="skills[__INDEX__].name" placeholder="Habilidad (Ej: Java)"/>
+</template>
+
+<template id="language-template">
+    <input type="text" data-name="languages[__INDEX__].name" placeholder="Idioma"/>
+    <input type="text" data-name="languages[__INDEX__].proficiency" placeholder="Nivel"/>
+</template>
+
+
+<!-- ============================================ -->
+<!-- LAYOUT PRINCIPAL DE LA APLICACIÓN             -->
+<!-- ============================================ -->
+<div class="app-layout">
+
+    <!-- === Panel Izquierdo: El Formulario === -->
+    <main class="form-panel">
+        <header class="form-header">
+            <div>
+                <h1>Constructor de CV</h1>
+                <p class="subtitle">Crea un CV profesional en minutos.</p>
+            </div>
+            <div class="theme-switcher-wrapper">
+                <label class="theme-switch" for="theme-toggle" title="Cambiar tema">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </header>
+
+        <form method="post" th:object="${cvData}" th:action="@{/preview-cv}" enctype="multipart/form-data">
+
+            <section class="animated-section">
+                <h2>Detalles Personales</h2>
+                <div class="grid-special">
+                    <!-- NUEVA INTERFAZ DE SUBIDA DE IMAGEN -->
+                    <div class="image-uploader">
+                        <label for="profileImage" class="image-uploader-label">
+                            <div class="image-preview" id="image-preview">
+                                <span class="upload-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                </span>
+                                <span class="upload-text">Subir foto</span>
+                            </div>
+                        </label>
+                        <input type="file" id="profileImage" name="profileImage" accept="image/png, image/jpeg">
+                    </div>
+                    <!-- FIN NUEVA INTERFAZ -->
+
+                    <div class="details-fields">
+                        <div class="grid-2-col">
+                            <div><label>Nombre:</label><input type="text" th:field="*{personalDetails.firstName}" placeholder="Ej: Ethan"/></div>
+                            <div><label>Apellido:</label><input type="text" th:field="*{personalDetails.lastName}" placeholder="Ej: Parker"/></div>
+                        </div>
+                        <div><label>Titular Profesional:</label><input type="text" th:field="*{personalDetails.jobTitle}" placeholder="Ej: Gerente de Mercado Certificado"/></div>
+                    </div>
+                </div>
+                <div><label>Titular Profesional:</label><input type="text" th:field="*{personalDetails.jobTitle}" placeholder="Ej: Gerente de Mercado Certificado"/></div>
+                <div class="grid-2-col">
+                    <div><label>Email:</label><input type="email" th:field="*{personalDetails.email}"/></div>
+                    <div><label>Teléfono:</label><input type="text" th:field="*{personalDetails.phone}"/></div>
+                </div>
+            </section>
+
+            <section class="animated-section">
+                <h2>Experiencia Profesional</h2>
+                <div id="experiences-container" class="dynamic-container"></div>
+                <div class="add-placeholder" id="add-experience" title="Añadir una nueva experiencia profesional">
+                    <span>+</span> Añadir Experiencia
+                </div>
+            </section>
+
+            <section class="animated-section">
+                <h2>Educación</h2>
+                <div id="educations-container" class="dynamic-container"></div>
+                <div class="add-placeholder" id="add-education" title="Añadir una nueva formación académica">
+                    <span>+</span> Añadir Educación
+                </div>
+            </section>
+
+            <section class="animated-section">
+                <h2>Licencias y Certificaciones</h2>
+                <div id="certifications-container" class="dynamic-container"></div>
+                <div class="add-placeholder" id="add-certification" title="Añadir una nueva certificación">
+                    <span>+</span> Añadir Certificación
+                </div>
+            </section>
+
+            <section class="animated-section">
+                <h2>Proyectos</h2>
+                <div id="projects-container" class="dynamic-container"></div>
+                <div class="add-placeholder" id="add-project" title="Añadir un nuevo proyecto">
+                    <span>+</span> Añadir Proyecto
+                </div>
+            </section>
+
+            <section class="animated-section">
+                <h2>Idiomas</h2>
+                <div id="languages-container" class="dynamic-container"></div>
+                <div class="add-placeholder" id="add-language" title="Añadir un nuevo idioma">
+                    <span>+</span> Añadir Idioma
+                </div>
+            </section>
+
+            <button type="submit" class="submit-btn">Generar y Previsualizar CV</button>
+        </form>
+    </main>
+
+    <!-- === Panel Derecho: Vista Previa Falsa === -->
+    <aside class="preview-panel">
+        <div id="live-preview-content" class="live-preview-wrapper">
+            <div class="preview-placeholder-gfx">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="currentColor"/></svg>
+            </div>
+            <h3>Vista Previa del CV</h3>
+            <p>Tu currículum se actualizará aquí en tiempo real a medida que completes el formulario.</p>
+        </div>
+    </aside>
+</div>
+
+<script th:src="@{/js/form-manager.js}"></script>
+</body>
+</html>
